@@ -156,7 +156,7 @@ function loadNums() {
          bottom ? null : m[idx + set.c],
          (bottom || right) ? null : m[idx + set.c + 1],
       ];
-      console.log(r);
+      // console.log(r);
       for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
          if (typeof (r[i]) == 'string') { acc++ }
       };

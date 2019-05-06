@@ -1,6 +1,6 @@
 #[Launch Minesweeper](./index.html)
 
-
+Previous commits can be found [HERE](https://git.generalassemb.ly/forrest217/projects/tree/master/minesweeper)
 
 
 
