@@ -18,12 +18,12 @@ var state = {
       beg: { r: 9, c: 9, m: 10 },
       inter: { r: 16, c: 16, m: 40 },
       exp: { r: 16, c: 30, m: 99 },
-      cust: { r: 10, c: 10, m: 30 },
+      cust: { r: 10, c: 10, m: 10 },
    },
 };
 /*-------Global Variables---------*/
 var win = null;
-var sz = 'inter';
+var sz = 'cust';
 var set = state.diff[sz];
 let m = state.mines;
 let p = state.play;
@@ -97,8 +97,7 @@ function tileChoose(evt) {// If mouse button is released while on a safe square,
    avoid();
    evt.target.style.backgroundImage = state[p[id]];
    smiley.style.backgroundImage = 'url(images/smiley.png)';
-   console.log(id + set.c + 1, id);
-   console.log(parseInt(id) + set.c + 1, parseInt(id));
+   // neighbors(currentTile, id);
 }
 
 /*---------Functions---------*/
@@ -130,6 +129,7 @@ function avoid() {
       p[target] = m[target];
       inPlay = true;
       prop();
+      neighbors(currentTile, target);
    }
 }
 
@@ -140,7 +140,7 @@ function loadMines() {// Randomize 'X's into mines array and populate surroundin
    m.forEach(neighbors); // Calls neighbors function on each square, loading surrounding mines count into mines array
 }
 
-function neighbors(tile, idx) {
+function neighbors(tileVal, idx) {
    let top = idx < set.c ? true : false;
    let right = (idx % set.c + 1) % set.c === 0 ? true : false; // These TRBL check for borders so they can be excluded from results
    let bottom = idx > m.length - set.c - 1 ? true : false;
@@ -155,17 +155,34 @@ function neighbors(tile, idx) {
       bottom ? { val: null } : { val: m[parseInt(idx) + set.c], id: parseInt(idx) + set.c }, // Below
       (bottom || right) ? { val: null } : { val: m[parseInt(idx) + set.c + 1], id: parseInt(idx) + set.c + 1 }, // Below R
    ];
-   let acc = radius.reduce((a, val)=>{if(val.val == 'X')a++;return a},0); // Adds up 'X's in neighboring squares -- this is the # entered into each non-mine square
-   if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
-   return radius;
+   let acc = radius.reduce((a, val) => { if (val.val == 'X') a++; return a }, 0); // Adds up 'X's in neighboring squares -- this is the # entered into each non-mine square
+   if (tileVal != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
+   if (inPlay == true) {
+      radius.forEach((obj) => {
+         if (tileVal === 0 && obj.val !== 'X' && p[obj.id] === null) {
+            console.log('blank');
+            p[obj.id] = obj.val;
+            render();
+            return neighbors(obj.val, obj.id);
+         }
+      });
+   }
+   return radius; // Array of 8 objects [{ val: , id: },...] (surrounding squares)
 }
 
 function prop() {
-   var radiusObjects = neighbors(currentTile, target);
-   console.log(radiusObjects);
-   // if (currentTile === 0) {
-
-   // }
+   var radObj = neighbors(currentTile, target); //currentTile, target
+   console.log('called by prop():', radObj);
+   // p.forEach((val, idx) => {// If 'tile' passed in === 0, every neighbor(id#) will be written into array p
+   //    if ( val === 0 ) { return neighbors(val, idx)
+   //       radObj.forEach((obj) => {
+   //          p[obj.id] = obj.val;
+   //          if (pval === 0 && p[obj.id] == null) { console.log('blank') } // ; return neighbors(obj.val, obj.id)
+   //          render();
+   //          // console.log(p[obj.id]);
+   //       });
+   //    // }
+   // });
 }
 
 function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
@@ -205,7 +222,11 @@ function render() { // ----> to be used during prop() and for WIN or LOSS condit
 //    (bottom || right) ? null : m[parseInt(idx) + set.c + 1],
 // ];
 
-
+// console.log('evt.target.id:',evt.target.id);
+// console.log('evt.target.id, no parseInt, subtraction:',id - set.c + 1, id);
+// console.log('evt.target.id, w/parseInt, subtraction:',parseInt(id) - set.c + 1, parseInt(id));
+// console.log('evt.target.id, no parseInt, addition:',id + set.c + 1, id);
+// console.log('evt.target.id, w/parseInt, addition:',parseInt(id) + set.c + 1, parseInt(id));
 
 
 
