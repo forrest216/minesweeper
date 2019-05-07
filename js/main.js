@@ -97,8 +97,8 @@ function tileChoose(evt) {// If mouse button is released while on a safe square,
    avoid();
    evt.target.style.backgroundImage = state[p[id]];
    smiley.style.backgroundImage = 'url(images/smiley.png)';
-   // console.log(id - set.c - 1, id);
-   // console.log(parseInt(id) + set.c + 1, parseInt(id));
+   console.log(id + set.c + 1, id);
+   console.log(parseInt(id) + set.c + 1, parseInt(id));
 }
 
 /*---------Functions---------*/
@@ -141,65 +141,30 @@ function loadMines() {// Randomize 'X's into mines array and populate surroundin
 }
 
 function neighbors(tile, idx) {
-   let acc = 0;
    let top = idx < set.c ? true : false;
    let right = (idx % set.c + 1) % set.c === 0 ? true : false; // These TRBL check for borders so they can be excluded from results
    let bottom = idx > m.length - set.c - 1 ? true : false;
    let left = idx % set.c === 0 ? true : false;
    let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
-      (top || left) ? null : m[idx - set.c - 1],
-      top ? null : m[idx - set.c],
-      (top || right) ? null : m[idx - set.c + 1],
-      left ? null : m[idx - 1],
-      right ? null : m[parseInt(idx) + 1],
-      (bottom || left) ? null : m[parseInt(idx) + set.c - 1],
-      bottom ? null : m[parseInt(idx) + set.c],
-      (bottom || right) ? null : m[parseInt(idx) + set.c + 1],
+      (top || left) ? { val: null } : { val: m[parseInt(idx) - set.c - 1], id: parseInt(idx) - set.c - 1 }, // Above L
+      top ? { val: null } : { val: m[parseInt(idx) - set.c], id: parseInt(idx) - set.c }, // Above
+      (top || right) ? { val: null } : { val: m[parseInt(idx) - set.c + 1], id: parseInt(idx) - set.c + 1 }, // Above R
+      left ? { val: null } : { val: m[parseInt(idx) - 1], id: parseInt(idx) - 1 }, // L
+      right ? { val: null } : { val: m[parseInt(idx) + 1], id: parseInt(idx) + 1 }, // R      Stupid type coercion
+      (bottom || left) ? { val: null } : { val: m[parseInt(idx) + set.c - 1], id: parseInt(idx) + set.c - 1 }, // Below L
+      bottom ? { val: null } : { val: m[parseInt(idx) + set.c], id: parseInt(idx) + set.c }, // Below
+      (bottom || right) ? { val: null } : { val: m[parseInt(idx) + set.c + 1], id: parseInt(idx) + set.c + 1 }, // Below R
    ];
-
-
-   for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
-      if (radius[i] == 'X') { acc++ }
-   }
+   let acc = radius.reduce((a, val)=>{if(val.val == 'X')a++;return a},0); // Adds up 'X's in neighboring squares -- this is the # entered into each non-mine square
    if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
-
-
-   return radius;
-}
-
-function test(tile, idx) {
-   // let acc = 0;
-   let top = idx < set.c ? true : false;
-   let right = (idx % set.c + 1) % set.c === 0 ? true : false; // These TRBL check for borders so they can be excluded from results
-   let bottom = idx > m.length - set.c - 1 ? true : false;
-   let left = idx % set.c === 0 ? true : false;
-   let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
-      (top || left) ? { val: null } : { val: m[parseInt(idx) - set.c - 1], id: parseInt(idx) - set.c - 1 },
-      top ? { val: null } : { val: m[parseInt(idx) - set.c], id: parseInt(idx) - set.c },
-      (top || right) ? { val: null } : { val: m[parseInt(idx) - set.c + 1], id: parseInt(idx) - set.c + 1 },
-      left ? { val: null } : { val: m[parseInt(idx) - 1], id: parseInt(idx) - 1 },
-      right ? { val: null } : { val: m[parseInt(idx) + 1], id: parseInt(idx) + 1 },
-      (bottom || left) ? { val: null } : { val: m[parseInt(idx) + set.c - 1], id: parseInt(idx) + set.c - 1 },
-      bottom ? { val: null } : { val: m[parseInt(idx) + set.c], id: parseInt(idx) + set.c },
-      (bottom || right) ? { val: null } : { val: m[parseInt(idx) + set.c + 1], id: parseInt(idx) + set.c + 1 },
-   ];
-   // for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
-   //    if (radius[i][val] == 'X') { acc++ }
-   // }
-   // if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
    return radius;
 }
 
 function prop() {
-   var radObj = test(currentTile, target);
-   console.log(
-      
-      radObj[1].val);
+   var radiusObjects = neighbors(currentTile, target);
+   console.log(radiusObjects);
    // if (currentTile === 0) {
 
-   //    // const thisRadius = neighbors(currentTile, target);
-   //    // console.log(neighbors(currentTile, target));
-   //    // render();
    // }
 }
 
@@ -229,16 +194,17 @@ function render() { // ----> to be used during prop() and for WIN or LOSS condit
 // console.log(inPlay);
 // }
 
-// console.log(idx,
-//    'above:',idx-set.c+1, idx-set.c, idx-set.c-1,
-//    'next to:',idx - 1,idx + 1,
-//    'below:',idx + set.c - 1,idx + set.c,idx + set.c + 1
-// );
-// console.log('top:',top, 'left:',left, 'right:',right)
+// let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
+//    (top || left) ? null : m[idx - set.c - 1],
+//    top ? null : m[idx - set.c],
+//    (top || right) ? null : m[idx - set.c + 1],
+//    left ? null : m[idx - 1],
+//    right ? null : m[parseInt(idx) + 1],
+//    (bottom || left) ? null : m[parseInt(idx) + set.c - 1],
+//    bottom ? null : m[parseInt(idx) + set.c],
+//    (bottom || right) ? null : m[parseInt(idx) + set.c + 1],
+// ];
 
-
-// console.log(state.mines);
-// console.log(state.play);
 
 
 
