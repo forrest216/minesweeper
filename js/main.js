@@ -14,26 +14,25 @@ var state = {
    '8': 'url("images/8.svg")',
    mines: [],
    play: [],
-   radius: [],
    diff: {
       beg: { r: 9, c: 9, m: 10 },
       inter: { r: 16, c: 16, m: 40 },
       exp: { r: 16, c: 30, m: 99 },
-      cust: { r: 10, c: 10, m: 20 },
+      cust: { r: 10, c: 10, m: 30 },
    },
 };
 /*-------Global Variables---------*/
 var win = null;
-var sz = 'cust';
+var sz = 'inter';
 var set = state.diff[sz];
-let r = state.radius;
 let m = state.mines;
 let p = state.play;
 var mouseDown = false;
 var target = null;
+var currentTile = m[target];
 var inPlay = false;
 /*---------References---------*/
-const boardArea = document.getElementById('boardArea');
+// const boardArea = document.getElementById('boardArea');
 const board = document.getElementById('board');
 const tile = document.getElementsByClassName('tile');
 const body = document.getElementById('body');
@@ -42,9 +41,9 @@ const smiley = document.getElementById('smiley');
 /*---------LISTENERS---------*/
 body.addEventListener('mousedown', () => { mouseDown = true }); // console.log(mousedown);
 body.addEventListener('mouseup', () => { mouseDown = false }); // console.log(mouseup);
-boardArea.addEventListener('mouseover', tileEnter, false);
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
+board.addEventListener('mouseover', tileEnter, false);
 board.addEventListener('mouseout', tileExit, false);
 board.addEventListener('mousedown', tilePress);
 board.addEventListener('mouseup', tileChoose);
@@ -63,11 +62,10 @@ function smile(evt) {
    evt.target.style.backgroundImage = 'url(images/smileydown.png)'
 }
 
-function tilePress(evt) {// Mouse press within a null tile shows pressed tile image
+function tilePress(evt) {// Mouse press(but not release) within a null tile shows pressed tile image
    var id = evt.target.id;
-   console.log(id);
    var bg = evt.target.style.backgroundImage;
-   if (bg == state[null] && state.play[id] == null) {
+   if (/*bg == state[null] && */state.play[id] == null) {
       evt.target.style.backgroundImage = state[0];
       smiley.style.backgroundImage = 'url(images/clench.png)'
    }
@@ -87,9 +85,11 @@ function tileExit(evt) {// If mouse is down when it exits a covered square that 
       evt.target.style.backgroundImage = state[null];
    }
 }
-function tileChoose(evt) {// If mouse button is released while on a null square, the contents are uncovered
+
+function tileChoose(evt) {// If mouse button is released while on a safe square, the contents are uncovered, (board resets if first guess contains mine)
    var id = evt.target.id;
    target = id;
+   currentTile = m[id];
    var notNull = p.some((el) => {
       return el !== null;
    });
@@ -97,13 +97,14 @@ function tileChoose(evt) {// If mouse button is released while on a null square,
    avoid();
    evt.target.style.backgroundImage = state[p[id]];
    smiley.style.backgroundImage = 'url(images/smiley.png)';
+   // console.log(id - set.c - 1, id);
+   // console.log(parseInt(id) + set.c + 1, parseInt(id));
 }
-
 
 /*---------Functions---------*/
 init();
 
-function init() {// Create board arrays and divs
+function init() {// Create board arrays and divs, calls loadMines()
    board.style.gridTemplateRows = `repeat(${set.r}, 25px)`;
    board.style.gridTemplateColumns = `repeat(${set.c}, 25px)`;
    for (let i = 0; i < set.r * set.c; i++) {
@@ -132,45 +133,77 @@ function avoid() {
    }
 }
 
-function loadMines() {// Randomize 'X's into mines array and populate surrounding square values
+function loadMines() {// Randomize 'X's into mines array and populate surrounding square values by calling loadNums()
    while (m.filter(function (y) { return y === 'X' }).length < set.m) {
       m[Math.floor(Math.random() * set.r * set.c)] = 'X';
    };
-   loadNums();  
+   m.forEach(neighbors); // Calls neighbors function on each square, loading surrounding mines count into mines array
 }
 
-function loadNums() {
-   m.forEach((tile, idx) => {
-      let acc = 0;
-      let top = idx < set.c ? true : false;
-      let right = (idx % set.c + 1) % set.c === 0 ? true : false;
-      let bottom = idx > m.length - set.c - 1 ? true : false;
-      let left = idx % set.c === 0 ? true : false;
-      r = [
-         (top || left) ? null : m[idx - set.c - 1],
-         top ? null : m[idx - set.c],
-         (top || right) ? null : m[idx - set.c + 1],
-         left ? null : m[idx - 1],
-         right ? null : m[idx + 1],
-         (bottom || left) ? null : m[idx + set.c - 1],
-         bottom ? null : m[idx + set.c],
-         (bottom || right) ? null : m[idx + set.c + 1],
-      ];
-      // console.log(r);
-      for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
-         if (typeof (r[i]) == 'string') { acc++ }
-      };
-      if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array
-   });
+function neighbors(tile, idx) {
+   let acc = 0;
+   let top = idx < set.c ? true : false;
+   let right = (idx % set.c + 1) % set.c === 0 ? true : false; // These TRBL check for borders so they can be excluded from results
+   let bottom = idx > m.length - set.c - 1 ? true : false;
+   let left = idx % set.c === 0 ? true : false;
+   let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
+      (top || left) ? null : m[idx - set.c - 1],
+      top ? null : m[idx - set.c],
+      (top || right) ? null : m[idx - set.c + 1],
+      left ? null : m[idx - 1],
+      right ? null : m[parseInt(idx) + 1],
+      (bottom || left) ? null : m[parseInt(idx) + set.c - 1],
+      bottom ? null : m[parseInt(idx) + set.c],
+      (bottom || right) ? null : m[parseInt(idx) + set.c + 1],
+   ];
+
+
+   for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
+      if (radius[i] == 'X') { acc++ }
+   }
+   if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
+
+
+   return radius;
+}
+
+function test(tile, idx) {
+   // let acc = 0;
+   let top = idx < set.c ? true : false;
+   let right = (idx % set.c + 1) % set.c === 0 ? true : false; // These TRBL check for borders so they can be excluded from results
+   let bottom = idx > m.length - set.c - 1 ? true : false;
+   let left = idx % set.c === 0 ? true : false;
+   let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
+      (top || left) ? { val: null } : { val: m[parseInt(idx) - set.c - 1], id: parseInt(idx) - set.c - 1 },
+      top ? { val: null } : { val: m[parseInt(idx) - set.c], id: parseInt(idx) - set.c },
+      (top || right) ? { val: null } : { val: m[parseInt(idx) - set.c + 1], id: parseInt(idx) - set.c + 1 },
+      left ? { val: null } : { val: m[parseInt(idx) - 1], id: parseInt(idx) - 1 },
+      right ? { val: null } : { val: m[parseInt(idx) + 1], id: parseInt(idx) + 1 },
+      (bottom || left) ? { val: null } : { val: m[parseInt(idx) + set.c - 1], id: parseInt(idx) + set.c - 1 },
+      bottom ? { val: null } : { val: m[parseInt(idx) + set.c], id: parseInt(idx) + set.c },
+      (bottom || right) ? { val: null } : { val: m[parseInt(idx) + set.c + 1], id: parseInt(idx) + set.c + 1 },
+   ];
+   // for (let i = 0; i < 9; i++) {// Adds all 'X's from neighboring squares
+   //    if (radius[i][val] == 'X') { acc++ }
+   // }
+   // if (tile != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
+   return radius;
 }
 
 function prop() {
-   if(m[target] === 0) {
-     console.log('empty');
-   }
+   var radObj = test(currentTile, target);
+   console.log(
+      
+      radObj[1].val);
+   // if (currentTile === 0) {
+
+   //    // const thisRadius = neighbors(currentTile, target);
+   //    // console.log(neighbors(currentTile, target));
+   //    // render();
+   // }
 }
 
-function render(){ // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
+function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
    p.forEach((tileState, idx) => {
       document.getElementById(`${idx}`).style.backgroundImage = state[tileState];
    });
@@ -216,3 +249,8 @@ SPRITES
 FLAGS
 First tile, if mine, still reveals after re-randomization
 */
+
+
+
+
+
