@@ -371,6 +371,27 @@ body {
    /* background-image: url(../images/windows.jpg) */
 }
 
+#menus {
+   font-family: Arial, Helvetica, sans-serif;
+   display: flex;
+   flex-direction: row;
+   justify-content: left;
+   background: white;
+   width: inherit;
+}
+
+button:focus {
+   outline:0;
+}
+
+#game {
+   border: none;
+}
+
+#help {
+   border: none;
+}
+
 #boardArea {
    background: #B9B9B9;
    border: 18px solid transparent;
@@ -404,12 +425,12 @@ body {
 
 #mineCount, #timer {
    color: #FC0D1B;
-   font-size: 55px;
+   font-size: 45px;
    letter-spacing: 1px;
    font-family: 'DS-DIGIB';
-   text-align: right;
+   /* text-align: right; */
    width: 90px;
-   background-size: 90px 45px;
+   background-size: 75px 38px;
    background-repeat: no-repeat;
    background-image: url(../images/redbg.png);
    background-position: center;
@@ -417,6 +438,16 @@ body {
 
 #mineCount {
    text-align: left;
+   text-indent: 10px;
+}
+
+#timer {
+   text-indent: 20px;
+   
+}
+
+p {
+   margin: 0;
 }
 
 #board {

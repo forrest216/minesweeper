@@ -23,13 +23,13 @@ var state = {
 };
 /*-------Global Variables---------*/
 var win = null;
-var sz = 'cust';
+var sz = 'beg';
 var set = state.diff[sz];
 let m = state.mines;
 let p = state.play;
 var mouseDown = false;
-var target = null;
-var currentTile = m[target];
+var target = null; // id of most recently clicked tile
+var currentTile = null; // Actual value of most recently clicked tile
 var inPlay = false;
 /*---------References---------*/
 // const boardArea = document.getElementById('boardArea');
@@ -64,8 +64,7 @@ function smile(evt) {
 
 function tilePress(evt) {// Mouse press(but not release) within a null tile shows pressed tile image
    var id = evt.target.id;
-   var bg = evt.target.style.backgroundImage;
-   if (/*bg == state[null] && */state.play[id] == null) {
+   if (state.play[id] == null) {
       evt.target.style.backgroundImage = state[0];
       smiley.style.backgroundImage = 'url(images/clench.png)'
    }
@@ -87,20 +86,21 @@ function tileExit(evt) {// If mouse is down when it exits a covered square that 
 }
 
 function tileChoose(evt) {// If mouse button is released while on a safe square, the contents are uncovered, (board resets if first guess contains mine)
+   if (win) return;
    var id = evt.target.id;
    target = id;
    currentTile = m[id];
    var notNull = p.some((el) => {
       return el !== null;
    });
+   console.log(id);
    inPlay = notNull;
    avoid();
-   evt.target.style.backgroundImage = state[p[id]];
    smiley.style.backgroundImage = 'url(images/smiley.png)';
-   // neighbors(currentTile, id);
+   render();
 }
 
-/*---------Functions---------*/
+/*---------FUNCTIONS---------*/
 init();
 
 function init() {// Create board arrays and divs, calls loadMines()
@@ -113,6 +113,7 @@ function init() {// Create board arrays and divs, calls loadMines()
       document.getElementById(i).style.backgroundImage = state[null];
    }
    inPlay = false;
+   win = false;
    loadMines();
 }
 
@@ -128,7 +129,7 @@ function avoid() {
    } else {
       p[target] = m[target];
       inPlay = true;
-      prop();
+      // prop();
       neighbors(currentTile, target);
    }
 }
@@ -158,11 +159,12 @@ function neighbors(tileVal, idx) {
    let acc = radius.reduce((a, val) => { if (val.val == 'X') a++; return a }, 0); // Adds up 'X's in neighboring squares -- this is the # entered into each non-mine square
    if (tileVal != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
    if (inPlay == true) {
+      render();
       radius.forEach((obj) => {
          if (tileVal === 0 && obj.val !== 'X' && p[obj.id] === null) {
             console.log('blank');
             p[obj.id] = obj.val;
-            render();
+            // render();
             return neighbors(obj.val, obj.id);
          }
       });
@@ -171,24 +173,23 @@ function neighbors(tileVal, idx) {
 }
 
 function prop() {
-   var radObj = neighbors(currentTile, target); //currentTile, target
+   var radObj = neighbors(currentTile, target);
    console.log('called by prop():', radObj);
-   // p.forEach((val, idx) => {// If 'tile' passed in === 0, every neighbor(id#) will be written into array p
-   //    if ( val === 0 ) { return neighbors(val, idx)
-   //       radObj.forEach((obj) => {
-   //          p[obj.id] = obj.val;
-   //          if (pval === 0 && p[obj.id] == null) { console.log('blank') } // ; return neighbors(obj.val, obj.id)
-   //          render();
-   //          // console.log(p[obj.id]);
-   //       });
-   //    // }
-   // });
+
 }
 
 function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
    p.forEach((tileState, idx) => {
       document.getElementById(`${idx}`).style.backgroundImage = state[tileState];
    });
+   if (p.includes('X')) {
+      win = true;
+      smiley.style.backgroundImage = 'url(images/dead.png)';
+      m.forEach((val, idx) => { if (val === 'X') { document.getElementById(`${idx}`).style.backgroundImage = state['X'] } });
+      document.getElementById(`${target}`).style.backgroundImage = state['BOOM'];
+   }
+   if (p.filter((val)=> {return val == null}).length === set.m) {
+      smiley.style.backgroundImage = 'url(images/glasses.png)'}
 };
 
 /*-----Maybe------*/
