@@ -1,7 +1,7 @@
-#MINESWEEPER
+# MINESWEEPER
 Welcome! This is supposed to be(and is) a direct copy of classic Windows Minesweeper. All coded and styled from scratch by yours, truly - Forrest Smith.
 
-##Screenshots:
+## Screenshots:
 No background, intermediate size:
 ![Link](https://i.imgur.com/S9QLSYK.png)
 
@@ -27,7 +27,7 @@ Minesweeper is played by clicking a tile to uncover the square below. Maybe you'
 
 Don't feel bad when you lose, this is a game of chance in the end. -F
 
-##[Launch Minesweeper](index.html)
+## [Launch Minesweeper](index.html)
 
 ### Planned improvements:
 * Custom board sizes
