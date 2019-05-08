@@ -1,8 +1,8 @@
 var state = {
    'null': 'url("images/null.svg")',
    'X': 'url("images/X.png")',
-   F: 'url("images/F.svg")',
-   BOOM: 'url("images/BOOM.png")',
+   'F': 'url("images/F.svg")',
+   'BOOM': 'url("images/BOOM.png")',
    '0': 'url("images/0.svg")',
    '1': 'url("images/1.svg")',
    '2': 'url("images/2.svg")',
@@ -18,13 +18,14 @@ var state = {
       beg: { r: 9, c: 9, m: 10 },
       inter: { r: 16, c: 16, m: 40 },
       exp: { r: 16, c: 30, m: 99 },
-      cust: { r: 10, c: 10, m: 10 },
+      cust: { r: 10, c: 10, m: 8 },
    },
 };
 /*-------Global Variables---------*/
 var win = null;
-var sz = 'beg';
-var set = state.diff[sz];
+var size = 'inter';
+var set = state.diff[size];
+var seconds = 000;
 let m = state.mines;
 let p = state.play;
 var mouseDown = false;
@@ -34,13 +35,16 @@ var inPlay = false;
 /*---------References---------*/
 // const boardArea = document.getElementById('boardArea');
 const board = document.getElementById('board');
-const tile = document.getElementsByClassName('tile');
 const body = document.getElementById('body');
 const smiley = document.getElementById('smiley');
+const gameMenu = document.getElementById('list');
+const help = document.getElementById('lol');
+const tictoc = document.getElementById('tic');
 
 /*---------LISTENERS---------*/
 body.addEventListener('mousedown', () => { mouseDown = true }); // console.log(mousedown);
 body.addEventListener('mouseup', () => { mouseDown = false }); // console.log(mouseup);
+gameMenu.addEventListener('click', diffSelect);
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
 board.addEventListener('mouseover', tileEnter, false);
@@ -49,17 +53,36 @@ board.addEventListener('mousedown', tilePress);
 board.addEventListener('mouseup', tileChoose);
 
 /*---------HANDLERS---------*/
-function reset(evt) {
-   while (board.hasChildNodes()) { board.removeChild(board.childNodes[0]) };
-   m.length = 0;
-   p.length = 0;
-   init();
-   loadMines();
-   evt.target.style.backgroundImage = 'url(images/smiley.png)';
+function diffMenu() {
+   gameMenu.classList.toggle("show");
+   help.classList.remove("show");
+}
+
+function helpMenu() {
+   help.classList.toggle("show");
+   gameMenu.classList.remove("show");
+}
+
+function diffSelect(evt) {
+   console.log(evt.target.id);
+   if (evt.target.id === 'beg' || 'inter' || 'exp') {
+   size = evt.target.id;
+   reset();
+   render();
+   diffMenu();
+   }
 }
 
 function smile(evt) {
    evt.target.style.backgroundImage = 'url(images/smileydown.png)'
+}
+
+function timer() {
+   if (inPlay === true) {
+      seconds += 1;
+      tictoc.innerHTML = 
+      seconds.toLocaleString(undefined,{minimumIntegerDigits: 3})
+   } else { return }
 }
 
 function tilePress(evt) {// Mouse press(but not release) within a null tile shows pressed tile image
@@ -102,6 +125,7 @@ function tileChoose(evt) {// If mouse button is released while on a safe square,
 
 /*---------FUNCTIONS---------*/
 init();
+setInterval(timer, 1000);
 
 function init() {// Create board arrays and divs, calls loadMines()
    board.style.gridTemplateRows = `repeat(${set.r}, 25px)`;
@@ -112,9 +136,27 @@ function init() {// Create board arrays and divs, calls loadMines()
       board.innerHTML += `<div id="${i}" class="tile"></div>`;
       document.getElementById(i).style.backgroundImage = state[null];
    }
-   inPlay = false;
+   inPlay = false; 
    win = false;
+   seconds = 000;
+   tictoc.innerHTML = seconds.toLocaleString(undefined,{minimumIntegerDigits: 3});
    loadMines();
+}
+
+function loadMines() {// Randomize 'X's into mines array and populate surrounding square values by calling loadNums()
+   while (m.filter(function (y) { return y === 'X' }).length < set.m) {
+      m[Math.floor(Math.random() * set.r * set.c)] = 'X';
+   };
+   m.forEach(neighbors); // Calls neighbors function on each square, loading surrounding mines count into mines array
+}
+
+function reset() {
+   while (board.hasChildNodes()) { board.removeChild(board.childNodes[0]) };
+   m.length = 0;
+   p.length = 0;
+   set = state.diff[size];
+   init();
+   smiley.style.backgroundImage = 'url(images/smiley.png)';
 }
 
 function avoid() {
@@ -124,21 +166,12 @@ function avoid() {
          m.length = 0;
          p.length = 0;
          init();
-         loadMines();
       }
    } else {
       p[target] = m[target];
       inPlay = true;
-      // prop();
       neighbors(currentTile, target);
    }
-}
-
-function loadMines() {// Randomize 'X's into mines array and populate surrounding square values by calling loadNums()
-   while (m.filter(function (y) { return y === 'X' }).length < set.m) {
-      m[Math.floor(Math.random() * set.r * set.c)] = 'X';
-   };
-   m.forEach(neighbors); // Calls neighbors function on each square, loading surrounding mines count into mines array
 }
 
 function neighbors(tileVal, idx) {
@@ -158,13 +191,12 @@ function neighbors(tileVal, idx) {
    ];
    let acc = radius.reduce((a, val) => { if (val.val == 'X') a++; return a }, 0); // Adds up 'X's in neighboring squares -- this is the # entered into each non-mine square
    if (tileVal != 'X') { m[idx] = acc; }// Loads #s into mines array if there is no 'X' there
-   if (inPlay == true) {
+   if (inPlay === true) {
       render();
       radius.forEach((obj) => {
          if (tileVal === 0 && obj.val !== 'X' && p[obj.id] === null) {
             console.log('blank');
             p[obj.id] = obj.val;
-            // render();
             return neighbors(obj.val, obj.id);
          }
       });
@@ -172,64 +204,24 @@ function neighbors(tileVal, idx) {
    return radius; // Array of 8 objects [{ val: , id: },...] (surrounding squares)
 }
 
-function prop() {
-   var radObj = neighbors(currentTile, target);
-   console.log('called by prop():', radObj);
-
-}
-
 function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
    p.forEach((tileState, idx) => {
       document.getElementById(`${idx}`).style.backgroundImage = state[tileState];
    });
    if (p.includes('X')) {
-      win = true;
+      win = true; inPlay = false;
       smiley.style.backgroundImage = 'url(images/dead.png)';
       m.forEach((val, idx) => { if (val === 'X') { document.getElementById(`${idx}`).style.backgroundImage = state['X'] } });
       document.getElementById(`${target}`).style.backgroundImage = state['BOOM'];
    }
-   if (p.filter((val)=> {return val == null}).length === set.m) {
-      smiley.style.backgroundImage = 'url(images/glasses.png)'}
+   if (p.filter((val) => { return val === null }).length === set.m) {
+      smiley.style.backgroundImage = 'url(images/glasses.png)';
+      win = true; inPlay = false;
+      p.forEach((val, idx) => {
+         if (val === null) { document.getElementById(`${idx}`).style.backgroundImage = state['F'] }
+      });
+   }
 };
-
-/*-----Maybe------*/
-
-
-
-/*------CRYPT-----*/
-
-// if (m[id] == 'X' && notNull == false) { //avoid(); // If mouseup target within board has m[target] === 'X', board is reshuffled, else tile is exposed
-// while (m[id] === 'X' && notNull === false) {
-//    while (board.hasChildNodes()) { board.removeChild(board.childNodes[0]) };
-//    m.length = 0;
-//    p.length = 0;
-//    init();
-//    loadMines();
-// }
-// } else {
-// p[id] = m[id];
-// inPlay = true;
-// console.log(inPlay);
-// }
-
-// let radius = [ // An array of objects representing neighboring squares. {val: value contained at id: index of neighboring square}
-//    (top || left) ? null : m[idx - set.c - 1],
-//    top ? null : m[idx - set.c],
-//    (top || right) ? null : m[idx - set.c + 1],
-//    left ? null : m[idx - 1],
-//    right ? null : m[parseInt(idx) + 1],
-//    (bottom || left) ? null : m[parseInt(idx) + set.c - 1],
-//    bottom ? null : m[parseInt(idx) + set.c],
-//    (bottom || right) ? null : m[parseInt(idx) + set.c + 1],
-// ];
-
-// console.log('evt.target.id:',evt.target.id);
-// console.log('evt.target.id, no parseInt, subtraction:',id - set.c + 1, id);
-// console.log('evt.target.id, w/parseInt, subtraction:',parseInt(id) - set.c + 1, parseInt(id));
-// console.log('evt.target.id, no parseInt, addition:',id + set.c + 1, id);
-// console.log('evt.target.id, w/parseInt, addition:',parseInt(id) + set.c + 1, parseInt(id));
-
-
 
 /*ICEBOX:
 

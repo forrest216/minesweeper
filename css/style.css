@@ -368,16 +368,43 @@ body {
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   /* background-image: url(../images/windows.jpg) */
+   background-image: url(../images/windows.jpg)
+}
+
+#gameBoundary {
+   border: 2px solid black;
+}
+
+#titlebar {
+   color: white;
+   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+   height: 30px;
+   font-size: 25px;
+   background: #0000A8;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+}
+
+img {
+   height: 30px;
+   width: 30px;
+}
+
+#title {
+   width: 175px;
 }
 
 #menus {
    font-family: Arial, Helvetica, sans-serif;
    display: flex;
    flex-direction: row;
+   align-items: center;
    justify-content: left;
    background: white;
    width: inherit;
+   
 }
 
 button:focus {
@@ -386,10 +413,54 @@ button:focus {
 
 #game {
    border: none;
+   display: inline-block;
+}
+
+#diff {
+   position: relative;
+   display: inline-block;
+   
+}
+
+.dropdown {
+   list-style-type: none;
+   display: none;
+   position: absolute;
+   border: 1px solid black;
+   background: white;
+   justify-content: left;
+}
+
+.dropdown div {
+   padding: 5px 10px;
+   display: block;
+}
+
+.dropdown div:hover {
+   background: #0000F2;
+   cursor: pointer;
+}
+
+.dropdown :nth-child(4) {
+   display: none;
 }
 
 #help {
    border: none;
+   display: inline-block;
+}
+
+#halp {
+   position: relative;
+   display: inline-block;
+}
+
+#nohelp {
+   width: 70px;
+}
+
+.show {
+   display: block;
 }
 
 #boardArea {
@@ -417,8 +488,8 @@ button:focus {
 }
 
 #smiley:hover {
-   height: 40px;
-   width: 40px;
+   height: 45px;
+   width: 45px;
    background-size: cover;
    background-image: url(../images/clench.png);
 }
@@ -442,7 +513,7 @@ button:focus {
 }
 
 #timer {
-   text-indent: 20px;
+   text-indent: 10px;
    
 }
 

@@ -13,20 +13,48 @@
 </head>
 
 <body id="body">
+
    <div id="gameBoundary">
-      <div id="menus">
-         <button id="game" type="button"><u>G</u>ame</button>
-         <button id="help" type="button"><u>H</u>elp</button>
+
+      <div id="titlebar">
+         <img src="images/min.png" alt="minimize">
+         <img id="title" src="images/title.png" alt="title">
+         <img src="images/opt.png" alt="options?">
       </div>
+
+      <div id="menus">
+         <button id="game" onclick="diffMenu()" type="button"><u>G</u>ame</button>
+         <div id="diff">
+            <div id="list" class="dropdown">
+
+               <div id="beg">Beginner</div>
+               <div id="inter">Intermediate</div>
+               <div id="exp">Expert</div>
+               <div id="cust">Custom</div>
+
+            </div>
+         </div>
+         <button id="help" onclick="helpMenu()" type="button"><u>H</u>elp</button>
+         <div id="halp">
+            <div id="lol" class="dropdown">
+               <div id="nohelp">You Wish</div>
+            </div>
+         </div>
+      </div>
+
       <div id="boardArea">
          <div id="headBoard">
             <div id="mineCount">000</div>
             <div id="smiley"></div>
-            <div id="timer"><p>123</p></div>
+            <div id="timer">
+               <p id="tic">000</p>
+            </div>
          </div>
          <div id="board"></div>
       </div>
+
    </div>
+
 </body>
 
 </html>
