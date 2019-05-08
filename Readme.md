@@ -27,7 +27,7 @@ Minesweeper is played by clicking a tile to uncover the square below. Maybe you'
 
 Don't feel bad when you lose, this is a game of chance in the end. -F
 
-## [Launch Minesweeper](index.html)
+## [Launch Minesweeper](https://forrest216.github.io/minesweeper/)
 
 ### Planned improvements:
 * Custom board sizes
