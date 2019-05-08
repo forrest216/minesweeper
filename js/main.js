@@ -92,7 +92,7 @@ function timer() {
    } else { return }
 }
 
-function tilePress(evt) {// Mouse press(but not release) within a null tile shows pressed tile image
+function tilePress(evt) {// Mouse press(but not release) within a null tile shows pressed tile image and smiley braces
    var id = evt.target.id;
    if (state.play[id] == null) {
       evt.target.style.backgroundImage = state[0];
@@ -218,29 +218,25 @@ function neighbors(tileVal, idx) {
 
 function footPrint(val, idx) {
    var radObjects = neighbors(val, idx);
-   console.log('neighbors output:', radObjects);
    if (typeof p[idx] == 'number' && leftMouseDown && rightMouseDown) {
       let f = 0; // Current footprint flag counter
       let xs = 0; // Current footprint mine counter
       let fArray = [];
-      radObjects.forEach((obj) => {
+      radObjects.forEach((obj) => { // Counts surrounding 'F's and 'X's for comparison
          if (p[obj.id] == 'F')++f;
          if (obj.val == 'X')++xs;
          fArray.push(p[obj.id]);
-         console.log(fArray);
       });
-
-      console.log(f, xs);
-      radObjects.forEach((obj) => {
+      radObjects.forEach((obj) => { // Exposes 8-square neighbor 'footprint' when # of flags matches # value of square image
          if (f == xs && p[obj.id] !== 'F' && fArray.includes('F')) {
             p[obj.id] = obj.val;
          };
-         if (obj.val === 0 && fArray.includes('F')) {neighbors(obj.val, obj.id)}
+         if (obj.val === 0 && fArray.includes('F')) { neighbors(obj.val, obj.id) }
       })
    };
 }
 
-function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)(get win function?)
+function render() { // ----> to be used during prop() and for WIN or LOSS condition (reveal all mines, smiley does ___)
    p.forEach((tileState, idx) => {
       document.getElementById(`${idx}`).style.backgroundImage = state[tileState];
    });
@@ -253,7 +249,7 @@ function render() { // ----> to be used during prop() and for WIN or LOSS condit
             document.getElementById(`${idx}`).style.backgroundImage = state['BOOM']
          }
       });
-   } else if (p.filter((val) => { return val === null || val === 'F'}).length === set.m) {
+   } else if (p.filter((val) => { return val === null || val === 'F' }).length === set.m) {
       smiley.style.backgroundImage = 'url(images/glasses.png)';
       win = true;
       inPlay = false;
@@ -278,13 +274,12 @@ function reset() {
    smiley.style.backgroundImage = 'url(images/smiley.png)';
 }
 
-function winner() {
+function winner() { // Cheating
    m.forEach((val, idx) => { if (val !== 'X') { p[idx] = val } });
    render();
 }
 
 /*ICEBOX:
-
 SPRITES
 First tile, if mine, still reveals after re-randomization
 */
