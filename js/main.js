@@ -26,14 +26,15 @@ var win = null;
 var size = 'inter';
 var set = state.diff[size];
 var seconds = 000;
+var flags = state.diff[size].m;
 let m = state.mines;
 let p = state.play;
 var mouseDown = false;
 var target = null; // id of most recently clicked tile
-var currentTile = null; // Actual value of most recently clicked tile
+var currentTile = null; // Hidden value of most recently clicked tile
 var inPlay = false;
 /*---------References---------*/
-// const boardArea = document.getElementById('boardArea');
+const boardArea = document.getElementById('boardArea');
 const board = document.getElementById('board');
 const body = document.getElementById('body');
 const smiley = document.getElementById('smiley');
@@ -45,12 +46,16 @@ const tictoc = document.getElementById('tic');
 body.addEventListener('mousedown', () => { mouseDown = true }); // console.log(mousedown);
 body.addEventListener('mouseup', () => { mouseDown = false }); // console.log(mouseup);
 gameMenu.addEventListener('click', diffSelect);
+boardArea.addEventListener('contextmenu', (evt) => {evt.preventDefault()});
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
 board.addEventListener('mouseover', tileEnter, false);
 board.addEventListener('mouseout', tileExit, false);
 board.addEventListener('mousedown', tilePress);
 board.addEventListener('mouseup', tileChoose);
+board.addEventListener('contextmenu', tileFlag);
+
+
 
 /*---------HANDLERS---------*/
 function diffMenu() {
@@ -123,6 +128,12 @@ function tileChoose(evt) {// If mouse button is released while on a safe square,
    render();
 }
 
+function tileFlag(evt) {
+   var id = evt.target.id;
+   p[id] === null ? p[id] = 'F' : p[id] === 'F' ? p[id] = null : null;
+   render();
+}
+
 /*---------FUNCTIONS---------*/
 init();
 setInterval(timer, 1000);
@@ -167,6 +178,8 @@ function avoid() {
          p.length = 0;
          init();
       }
+   } else if (p[target] === 'F') {
+      return;
    } else {
       p[target] = m[target];
       inPlay = true;
