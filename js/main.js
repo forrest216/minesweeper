@@ -35,18 +35,19 @@ var target = null;
 var currentTile = null;
 var inPlay = false;
 
-const boardArea = document.getElementById('boardArea');
-const board = document.getElementById('board');
 const body = document.getElementById('body');
-const smiley = document.getElementById('smiley');
+const boardArea = document.getElementById('boardArea');
 const gameMenu = document.getElementById('list');
 const help = document.getElementById('lol');
 const tictoc = document.getElementById('tic');
 const count = document.getElementById('mineCount');
+const smiley = document.getElementById('smiley');
+const board = document.getElementById('board');
 
 body.addEventListener('mousedown', (evt) => { if (evt.which == 1) { leftMouseDown = true }; if (evt.which == 3) { rightMouseDown = true } });
 body.addEventListener('mouseup', (evt) => { if (evt.which == 1) { leftMouseDown = false }; if (evt.which == 3) { rightMouseDown = false } });
 gameMenu.addEventListener('click', diffSelect);
+help.addEventListener('click', reSkin);
 boardArea.addEventListener('contextmenu', (evt) => { evt.preventDefault() });
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
@@ -101,6 +102,7 @@ function tileEnter(evt) {
    var bg = evt.target.style.backgroundImage;
    if (leftMouseDown == true && bg == state[null] && state.play[id] == null) {
       evt.target.style.backgroundImage = state[0];
+      smiley.style.backgroundImage = 'url(images/clench.png)'
    }
 }
 
@@ -108,6 +110,7 @@ function tileExit(evt) {
    var id = evt.target.id;
    if (leftMouseDown == true && state.play[id] == null) {
       evt.target.style.backgroundImage = state[null];
+      smiley.style.backgroundImage = 'url(images/smiley.png)';
    }
 }
 
@@ -144,8 +147,8 @@ init();
 setInterval(timer, 1000);
 
 function init() {
-   board.style.gridTemplateRows = `repeat(${set.r}, 25px)`;
-   board.style.gridTemplateColumns = `repeat(${set.c}, 25px)`;
+   board.style.gridTemplateRows = `repeat(${set.r}, 22px)`;
+   board.style.gridTemplateColumns = `repeat(${set.c}, 22px)`;
    for (let i = 0; i < set.r * set.c; i++) {
       state.mines.push(null);
       state.play.push(null);

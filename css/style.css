@@ -437,7 +437,7 @@ button:focus {
 }
 
 .dropdown div:hover {
-   background: #0000F2;
+   background: cornflowerblue;
    cursor: pointer;
 }
 
@@ -527,7 +527,7 @@ p {
 }
 
 .tile {
-   width: 25px;
-   height: 25px;
+   width: 22px;
+   height: 22px;
    background-size: cover;
 }
