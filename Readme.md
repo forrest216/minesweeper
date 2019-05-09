@@ -34,7 +34,7 @@ Don't feel bad when you lose, this is a game of chance in the end. -F
 ### Planned improvements:
 * Custom board sizes
 * Tweak to initial tile press(cannot click a mine on first try but square still reveals)
-* Alternate theme
+* Alternate theme **DONE** --Caution - may give you a headache within seconds haha
 
 Previous commits can be found [HERE](https://git.generalassemb.ly/forrest217/projects/tree/master/minesweeper)
 

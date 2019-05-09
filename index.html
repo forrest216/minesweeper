@@ -6,7 +6,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <meta http-equiv="X-UA-Compatible" content="ie=edge">
    <title>Minesweeper!</title>
-   <link rel="stylesheet" href="css/style.css">
+   <link id="theme" rel="stylesheet" href="css/style.css">
    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
       integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
    <script defer src="js/main.js"></script>
@@ -17,9 +17,9 @@
    <div id="gameBoundary">
 
       <div id="titlebar">
-         <img src="images/min.png" alt="minimize">
-         <img id="title" src="images/title.png" alt="title">
-         <img src="images/opt.png" alt="options?">
+         <img class="titImg" src="images/min.png" alt="minimize">
+         <img id="title" src="images/title.png" alt="title"><div id="altTitle">MINESWEEPER</div>
+         <img class="titImg" src="images/opt.png" alt="options?">
       </div>
 
       <div id="menus">
@@ -34,10 +34,10 @@
 
             </div>
          </div>
-         <button id="help" onclick="helpMenu()" type="button"><u>H</u>elp</button>
+         <button id="help" onclick="helpMenu()" type="button"><u>T</u>heme</button>
          <div id="halp">
             <div id="lol" class="dropdown">
-               <div id="nohelp">You Wish</div>
+               <div id="noHelp">This Theme Sucks!</div>
             </div>
          </div>
       </div>

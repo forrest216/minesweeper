@@ -1,17 +1,25 @@
+var images = {
+   'smiley': { w: 'url("images/smiley.png")', n: 'url("images/neonsmiley.jpg")' },
+   'clench': { w: 'url("images/clench.png")', n: 'url("images/neonclench.jpg")' },
+   'down': { w: 'url("images/smileydown.png")', n: 'url("images/neonsmileydown.gif")' },
+   'dead': { w: 'url("images/dead.png")', n: 'url("images/neondead.jpg")' },
+   'win': { w: 'url("images/glasses.png")', n: 'url("images/neonwin.gif")' },
+   'null': { w: 'url("images/null.svg")', n: 'url("images/eyegif.gif")' },
+   'X': { w: 'url("images/X.png")', },
+   'F': { w: 'url("images/F.svg")', n: 'url("images/neonF.gif")' },
+   'BOOM': { w: 'url("images/BOOM.png")', n: 'url("images/neonBOOM.gif")' },
+   '0': { w: 'url("images/0.svg")', n: 'url("images/neon0.png")' },
+   '1': { w: 'url("images/1.svg")', n: 'url("images/neon1.png")' },
+   '2': { w: 'url("images/2.svg")', n: 'url("images/neon2.png")' },
+   '3': { w: 'url("images/3.svg")', n: 'url("images/neon3.png")' },
+   '4': { w: 'url("images/4.svg")', n: 'url("images/neon4.png")' },
+   '5': { w: 'url("images/5.svg")', n: 'url("images/neon5.png")' },
+   '6': { w: 'url("images/6.svg")', n: 'url("images/neon6.png")' },
+   '7': { w: 'url("images/7.svg")', n: 'url("images/neon7.png")' },
+   '8': { w: 'url("images/8.svg")', n: 'url("images/neon8.png")' },
+}
+
 var state = {
-   'null': 'url("images/null.svg")',
-   'X': 'url("images/X.png")',
-   'F': 'url("images/F.svg")',
-   'BOOM': 'url("images/BOOM.png")',
-   '0': 'url("images/0.svg")',
-   '1': 'url("images/1.svg")',
-   '2': 'url("images/2.svg")',
-   '3': 'url("images/3.svg")',
-   '4': 'url("images/4.svg")',
-   '5': 'url("images/5.svg")',
-   '6': 'url("images/6.svg")',
-   '7': 'url("images/7.svg")',
-   '8': 'url("images/8.svg")',
    mines: [],
    play: [],
    diff: {
@@ -20,7 +28,7 @@ var state = {
       exp: { r: 16, c: 30, m: 99 },
       cust: { r: 10, c: 10, m: 8 },
    },
-};
+}
 
 var win = null;
 var size = 'inter';
@@ -34,6 +42,7 @@ var rightMouseDown = false;
 var target = null;
 var currentTile = null;
 var inPlay = false;
+var neon = 'w';
 
 const body = document.getElementById('body');
 const boardArea = document.getElementById('boardArea');
@@ -47,7 +56,7 @@ const board = document.getElementById('board');
 body.addEventListener('mousedown', (evt) => { if (evt.which == 1) { leftMouseDown = true }; if (evt.which == 3) { rightMouseDown = true } });
 body.addEventListener('mouseup', (evt) => { if (evt.which == 1) { leftMouseDown = false }; if (evt.which == 3) { rightMouseDown = false } });
 gameMenu.addEventListener('click', diffSelect);
-boardArea.addEventListener('contextmenu', (evt) => { evt.preventDefault() });
+help.addEventListener('click', theme);
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
 board.addEventListener('mouseover', tileEnter, false);
@@ -76,8 +85,24 @@ function diffSelect(evt) {
    }
 }
 
+function theme(evt) {
+   const styl = document.getElementById('theme');
+   if (evt.target.id === 'noHelp') {
+      if (styl.getAttribute('href') == 'css/style.css') {
+         styl.setAttribute('href', 'css/neon.css');
+         neon = 'n';
+      } else if (styl.getAttribute('href') == 'css/neon.css') {
+         styl.setAttribute('href', 'css/style.css');
+         neon = 'w'
+      }
+      reset();
+      render();
+      helpMenu();
+   };
+}
+
 function smile(evt) {
-   evt.target.style.backgroundImage = 'url(images/smileydown.png)'
+   evt.target.style.backgroundImage = images['down'][neon]
 }
 
 function timer() {
@@ -91,31 +116,30 @@ function timer() {
 function tilePress(evt) {
    var id = evt.target.id;
    if (state.play[id] == null) {
-      evt.target.style.backgroundImage = state[0];
-      smiley.style.backgroundImage = 'url(images/clench.png)'
+      evt.target.style.backgroundImage = images[0][neon];
+      smiley.style.backgroundImage = images['clench'][neon]
    }
 }
 
 function tileEnter(evt) {
    var id = evt.target.id;
    var bg = evt.target.style.backgroundImage;
-   if (leftMouseDown == true && bg == state[null] && state.play[id] == null) {
-      evt.target.style.backgroundImage = state[0];
-      smiley.style.backgroundImage = 'url(images/clench.png)'
+   if (leftMouseDown == true && bg == images['null'][neon] && state.play[id] == null) {
+      evt.target.style.backgroundImage = images[0][neon];
+      smiley.style.backgroundImage = images['clench'][neon]
    }
 }
 
 function tileExit(evt) {
    var id = evt.target.id;
    if (leftMouseDown == true && state.play[id] == null) {
-      evt.target.style.backgroundImage = state[null];
-      smiley.style.backgroundImage = 'url(images/smiley.png)';
+      evt.target.style.backgroundImage = images['null'][neon];
+      smiley.style.backgroundImage = images['smiley'][neon];
    }
 }
 
 function tileChoose(evt) {
    var id = evt.target.id;
-   if (leftMouseDown && rightMouseDown) console.log('both');
    if (win) return;
    if (evt.button == 2) return;
    target = id;
@@ -125,7 +149,7 @@ function tileChoose(evt) {
    });
    inPlay = notNull;
    avoid();
-   smiley.style.backgroundImage = 'url(images/smiley.png)';
+   smiley.style.backgroundImage = images['smiley'][neon];
    render();
 }
 
@@ -152,7 +176,7 @@ function init() {
       state.mines.push(null);
       state.play.push(null);
       board.innerHTML += `<div id="${i}" class="tile"></div>`;
-      document.getElementById(i).style.backgroundImage = state[null];
+      document.getElementById(i).style.backgroundImage = images['null'][neon];
    }
    inPlay = false;
    win = false;
@@ -235,29 +259,29 @@ function footPrint(val, idx) {
 
 function render() {
    p.forEach((tileState, idx) => {
-      document.getElementById(`${idx}`).style.backgroundImage = state[tileState];
+      document.getElementById(`${idx}`).style.backgroundImage = images[tileState][neon];
    });
    if (p.includes('X')) {
       win = true;
       inPlay = false;
-      smiley.style.backgroundImage = 'url(images/dead.png)';
+      smiley.style.backgroundImage = images['dead'][neon];
       m.forEach((val, idx) => {
          if (val === 'X') {
-            document.getElementById(`${idx}`).style.backgroundImage = state['BOOM']
+            document.getElementById(`${idx}`).style.backgroundImage = images['BOOM'][neon];
          }
       });
    } else if (p.filter((val) => { return val === null || val === 'F' }).length === set.m) {
-      smiley.style.backgroundImage = 'url(images/glasses.png)';
+      smiley.style.backgroundImage = images['win'][neon];
       win = true;
       inPlay = false;
       p.forEach((val, idx) => {
          if (val === null) {
-            document.getElementById(`${idx}`).style.backgroundImage = state['F']
+            document.getElementById(`${idx}`).style.backgroundImage = images['F'][neon];
          }
       });
    } else {
       count.innerHTML = flags.toLocaleString(undefined, { minimumIntegerDigits: 3 });
-      smiley.style.backgroundImage = 'url(images/smiley.png)';
+      smiley.style.backgroundImage = images['smiley'][neon];
    };
 }
 
@@ -268,7 +292,7 @@ function reset() {
    set = state.diff[size];
    flags = state.diff[size].m;
    init();
-   smiley.style.backgroundImage = 'url(images/smiley.png)';
+   smiley.style.backgroundImage = images['smiley'][neon];
 }
 
 function winner() {
@@ -277,6 +301,5 @@ function winner() {
 }
 
 /*ICEBOX:
-SPRITES
 First tile, if mine, still reveals after re-randomization
 */

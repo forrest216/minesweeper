@@ -368,11 +368,13 @@ body {
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   background-image: url(../images/windows.jpg)
+   background-image: url(../images/windows.jpg);
+   background-repeat: no-repeat;
+   background-size: cover;
 }
 
 #gameBoundary {
-   border: 2px solid black;
+   border: 4px solid black;
 }
 
 #titlebar {
@@ -394,6 +396,10 @@ img {
 
 #title {
    width: 175px;
+}
+
+#altTitle {
+   display: none;
 }
 
 #menus {
@@ -455,8 +461,8 @@ button:focus {
    display: inline-block;
 }
 
-#nohelp {
-   width: 70px;
+#noHelp {
+   width: 140px;
 }
 
 .show {
@@ -523,3 +529,4 @@ p {
 .tile {
    background-size: cover;
 }
+
