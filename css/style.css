@@ -476,32 +476,26 @@ button:focus {
    align-items: center;
    background: #B9B9B9;
    height: 58px;
-   /* border: 18px solid transparent;
-   border-image: url(../images/border.png) 80; */
 }
 
 #smiley {
-   height: 45px;
-   width: 45px;
+   height: 35px;
+   width: 35px;
    background-size: cover;
    background-image: url(../images/smiley.png);
 }
 
 #smiley:hover {
-   height: 45px;
-   width: 45px;
-   background-size: cover;
    background-image: url(../images/clench.png);
 }
 
 #mineCount, #timer {
    color: #FC0D1B;
-   font-size: 45px;
+   font-size: 35px;
+   width: 60.5px;
    letter-spacing: 1px;
    font-family: 'DS-DIGIB';
-   /* text-align: right; */
-   width: 90px;
-   background-size: 75px 38px;
+   background-size: 60px 30px;
    background-repeat: no-repeat;
    background-image: url(../images/redbg.png);
    background-position: center;
@@ -509,11 +503,11 @@ button:focus {
 
 #mineCount {
    text-align: left;
-   text-indent: 10px;
+   text-indent: 4px;
 }
 
 #timer {
-   text-indent: 10px;
+   text-indent: 4px;
    
 }
 
@@ -527,7 +521,5 @@ p {
 }
 
 .tile {
-   width: 22px;
-   height: 22px;
    background-size: cover;
 }

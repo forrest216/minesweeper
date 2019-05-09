@@ -47,7 +47,6 @@ const board = document.getElementById('board');
 body.addEventListener('mousedown', (evt) => { if (evt.which == 1) { leftMouseDown = true }; if (evt.which == 3) { rightMouseDown = true } });
 body.addEventListener('mouseup', (evt) => { if (evt.which == 1) { leftMouseDown = false }; if (evt.which == 3) { rightMouseDown = false } });
 gameMenu.addEventListener('click', diffSelect);
-help.addEventListener('click', reSkin);
 boardArea.addEventListener('contextmenu', (evt) => { evt.preventDefault() });
 smiley.addEventListener('click', reset);
 smiley.addEventListener('mousedown', smile);
