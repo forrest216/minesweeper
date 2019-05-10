@@ -373,9 +373,7 @@ body {
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   background-image: url(../images/archive/trippy-gif-BG.gif);
-   background-repeat: no-repeat;
-   background-size: cover;
+   background-image: url(../images/archive/cat.gif);
 }
 
 #gameBoundary {

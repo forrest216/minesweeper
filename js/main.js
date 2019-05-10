@@ -1,13 +1,14 @@
 var images = {
+   'bg': { w: 'url("images/windows.jpg")', n: 'url(images/archive/cat.gif)' },
    'smiley': { w: 'url("images/smiley.png")', n: 'url("images/neonsmiley.jpg")' },
    'clench': { w: 'url("images/clench.png")', n: 'url("images/neonclench.jpg")' },
    'down': { w: 'url("images/smileydown.png")', n: 'url("images/neonsmileydown.gif")' },
    'dead': { w: 'url("images/dead.png")', n: 'url("images/neondead.jpg")' },
    'win': { w: 'url("images/glasses.png")', n: 'url("images/neonwin.gif")' },
+   'BOOM': { w: 'url("images/BOOM.png")', n: 'url("images/neonBOOM.gif")' },
    'null': { w: 'url("images/null.svg")', n: 'url("images/eyegif.gif")' },
    'X': { w: 'url("images/X.png")', },
    'F': { w: 'url("images/F.svg")', n: 'url("images/neonF.gif")' },
-   'BOOM': { w: 'url("images/BOOM.png")', n: 'url("images/neonBOOM.gif")' },
    '0': { w: 'url("images/0.svg")', n: 'url("images/neon0.png")' },
    '1': { w: 'url("images/1.svg")', n: 'url("images/neon1.png")' },
    '2': { w: 'url("images/2.svg")', n: 'url("images/neon2.png")' },
@@ -272,6 +273,7 @@ function render() {
       });
    } else if (p.filter((val) => { return val === null || val === 'F' }).length === set.m) {
       smiley.style.backgroundImage = images['win'][neon];
+      if (neon === 'n') body.style.backgroundImage = 'url(images/archive/pika.gif)';
       win = true;
       inPlay = false;
       p.forEach((val, idx) => {
@@ -292,6 +294,7 @@ function reset() {
    set = state.diff[size];
    flags = state.diff[size].m;
    init();
+   body.style.backgroundImage = images['bg'][neon];
    smiley.style.backgroundImage = images['smiley'][neon];
 }
 
