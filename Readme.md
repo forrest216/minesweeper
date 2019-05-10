@@ -40,6 +40,10 @@ Previous commits can be found [HERE](https://git.generalassemb.ly/forrest217/pro
 
 All tile images sourced from:
 https://commons.wikimedia.org/wiki/Category:Minesweeper
+and
+https://www.google.com , https://giphy.com
 
-Background image from:
+Background images from:
 https://www.zdnet.com/pictures/windows-1-0-to-10-the-changing-face-of-microsofts-landmark-os/4/
+and
+https://giphy.com
