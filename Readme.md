@@ -3,19 +3,19 @@ Welcome! This is supposed to be(and is) a direct copy of classic Windows Mineswe
 
 ## Screenshots:
 ### Intermediate size:
-![Link](https://imgur.com/9B4xufH)
+![Link](https://i.imgur.com/9B4xufH.png)
 
 ### Expert size with difficulty select menu:
-![Link](https://imgur.com/Jjv8a3p)
+![Link](https://i.imgur.com/Jjv8a3p.png)
 
 ### Gameplay with Loss:
-![Link](https://imgur.com/HfmGUN7)
+![Link](https://i.imgur.com/HfmGUN7.png)
 
 ### Winner!:
-![Link](https://imgur.com/SjiHBRb)
+![Link](https://i.imgur.com/SjiHBRb.png)
 
 ### Psychedelic!:
-![Link](https://imgur.com/0dBWNRN)
+![Link](https://i.imgur.com/0dBWNRN.png)
 
 All game logic and some styling coded in Javascript, styling and structure written in CSS and HTML.
 
