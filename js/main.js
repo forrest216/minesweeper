@@ -1,13 +1,15 @@
 var images = {
-   'bg': { w: 'url("images/windows.jpg")', n: 'url(images/archive/cat.gif)' },
+   'bg': { w: 'url("images/windows.jpg")', n: 'url(images/cat.gif)' },
+   'neonbgs': { w: 'url("images/trumpgret.gif")', n: 'url(images/pika.gif)' },
+
    'smiley': { w: 'url("images/smiley.png")', n: 'url("images/neonsmiley.jpg")' },
    'clench': { w: 'url("images/clench.png")', n: 'url("images/neonclench.jpg")' },
    'down': { w: 'url("images/smileydown.png")', n: 'url("images/neonsmileydown.gif")' },
    'dead': { w: 'url("images/dead.png")', n: 'url("images/neondead.jpg")' },
    'win': { w: 'url("images/glasses.png")', n: 'url("images/neonwin.gif")' },
    'BOOM': { w: 'url("images/BOOM.png")', n: 'url("images/neonBOOM.gif")' },
-   'null': { w: 'url("images/null.svg")', n: 'url("images/eyegif.gif")' },
-   'X': { w: 'url("images/X.png")', },
+   'null': { w: 'url("images/null.svg")', n: 'url("images/neonnull.jpeg")' },
+   'X': { w: 'url("images/X.png")', n: 'url("images/eye.gif")' },
    'F': { w: 'url("images/F.svg")', n: 'url("images/neonF.gif")' },
    '0': { w: 'url("images/0.svg")', n: 'url("images/neon0.png")' },
    '1': { w: 'url("images/1.svg")', n: 'url("images/neon1.png")' },
@@ -266,6 +268,12 @@ function render() {
       win = true;
       inPlay = false;
       smiley.style.backgroundImage = images['dead'][neon];
+      if (neon === 'n') body.style.backgroundImage = images['neonbgs']['w'];
+      p.forEach((val, idx) => {
+         if (val === null && neon === 'n') {
+            document.getElementById(`${idx}`).style.backgroundImage = images['X'][neon];
+         }
+      });
       m.forEach((val, idx) => {
          if (val === 'X') {
             document.getElementById(`${idx}`).style.backgroundImage = images['BOOM'][neon];
@@ -273,7 +281,9 @@ function render() {
       });
    } else if (p.filter((val) => { return val === null || val === 'F' }).length === set.m) {
       smiley.style.backgroundImage = images['win'][neon];
-      if (neon === 'n') body.style.backgroundImage = 'url(images/archive/pika.gif)';
+      if (neon === 'n') {
+         body.style.backgroundImage = images['neonbgs']['n'];
+      }
       win = true;
       inPlay = false;
       p.forEach((val, idx) => {
@@ -302,7 +312,3 @@ function winner() {
    m.forEach((val, idx) => { if (val !== 'X') { p[idx] = val } });
    render();
 }
-
-/*ICEBOX:
-First tile, if mine, still reveals after re-randomization
-*/
