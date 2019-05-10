@@ -452,7 +452,8 @@ button:focus {
 }
 
 .dropdown div:hover {
-   background: cornflowerblue;
+   color: black;
+   background: #98FD31;
    cursor: pointer;
 }
 

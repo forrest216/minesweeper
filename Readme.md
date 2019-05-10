@@ -2,20 +2,20 @@
 Welcome! This is supposed to be(and is) a direct copy of classic Windows Minesweeper. All coded and styled from scratch by yours, truly - Forrest Smith.
 
 ## Screenshots:
-No background, intermediate size:
-![Link](https://i.imgur.com/S9QLSYK.png)
-
-### Beginner size, 'Help' Menu:
-![Link](https://i.imgur.com/S9QLSYK.png)
+### Intermediate size:
+![Link](https://imgur.com/9B4xufH)
 
 ### Expert size with difficulty select menu:
-![Link](https://i.imgur.com/uy1ZoIq.png)
+![Link](https://imgur.com/Jjv8a3p)
 
 ### Gameplay with Loss:
-![Link](https://i.imgur.com/O1kC6nH.png)
+![Link](https://imgur.com/HfmGUN7)
 
 ### Winner!:
-![Link](https://i.imgur.com/UsjcW4e.png)
+![Link](https://imgur.com/SjiHBRb)
+
+### Psychedelic!:
+![Link](https://imgur.com/0dBWNRN)
 
 All game logic and some styling coded in Javascript, styling and structure written in CSS and HTML.
 
