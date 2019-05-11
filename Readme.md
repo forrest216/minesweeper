@@ -1,5 +1,5 @@
 # [MINESWEEPER](https://forrest216.github.io/minesweeper/)
-Welcome! This is supposed to be(and is) a direct copy of classic Windows Minesweeper. All coded and styled from scratch by yours, truly - Forrest Smith.
+Welcome! This is supposed to be(and is) an homage to classic Windows Minesweeper. All coded and styled from scratch by yours, truly - Forrest Smith.
 
 ## Screenshots:
 ### Intermediate size:
